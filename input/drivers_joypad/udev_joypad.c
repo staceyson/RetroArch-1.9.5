@@ -187,24 +187,63 @@ static int udev_add_pad(struct udev_device *dev, unsigned p, int fd, const char 
             (ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(absbit)), absbit) < 0))
       return -1;
 
-   /* Go through all possible keycodes, check if they are used,
-    * and map them to button/axes/hat indices.
-    */
-   for (i = KEY_UP; i <= KEY_DOWN && buttons < UDEV_NUM_BUTTONS; i++)
-      if (test_bit(i, keybit))
-         pad->button_bind[i] = buttons++;
-   for (i = BTN_MISC; i < KEY_MAX && buttons < UDEV_NUM_BUTTONS; i++)
-      if (test_bit(i, keybit))
-         pad->button_bind[i] = buttons++;
-   /* The following two ranges are scanned and added after the above
-    * ranges to maintain compatibility with existing key maps.
-    */
-   for (i = 0; i < KEY_UP && buttons < UDEV_NUM_BUTTONS; i++)
-      if (test_bit(i, keybit))
-         pad->button_bind[i] = buttons++;
-   for (i = KEY_DOWN + 1; i < BTN_MISC && buttons < UDEV_NUM_BUTTONS; i++)
-      if (test_bit(i, keybit))
-         pad->button_bind[i] = buttons++;
+   /* Atari GSG Hack - configure a joypad for GSG */
+   if (strcmp(device_name, "agpio-keys") == 0 &&
+               strcmp(path, "/dev/input/event1)") == 0) {
+       pad->button_bind[BTN_EAST]   = RETRO_DEVICE_ID_JOYPAD_B;             /* [0] B */
+       pad->button_bind[BTN_SOUTH]  = RETRO_DEVICE_ID_JOYPAD_Y;             /* [1] Y */
+       pad->button_bind[BTN_TL]     = RETRO_DEVICE_ID_JOYPAD_SELECT;        /* [2] SELECT */
+       pad->button_bind[BTN_TR]     = RETRO_DEVICE_ID_JOYPAD_START;         /* [3] START */
+       pad->button_bind[KEY_UP]     = RETRO_DEVICE_ID_JOYPAD_UP;            /* [4] UP */
+       pad->button_bind[KEY_DOWN]   = RETRO_DEVICE_ID_JOYPAD_DOWN;          /* [5] DOWN */
+       pad->button_bind[KEY_LEFT]   = RETRO_DEVICE_ID_JOYPAD_LEFT;          /* [6] LEFT */
+       pad->button_bind[KEY_RIGHT]  = RETRO_DEVICE_ID_JOYPAD_RIGHT;         /* [7] RIGHT */
+       pad->button_bind[BTN_NORTH]  = RETRO_DEVICE_ID_JOYPAD_A;             /* [8] A */
+       pad->button_bind[BTN_WEST]   = RETRO_DEVICE_ID_JOYPAD_X;             /* [9] X */
+       pad->button_bind[BTN_C]      = RETRO_DEVICE_ID_JOYPAD_L;             /* [10] L */
+       pad->button_bind[BTN_Z]      = RETRO_DEVICE_ID_JOYPAD_R;             /* [11] R */
+       pad->button_bind[BTN_TL2]    = RETRO_DEVICE_ID_JOYPAD_L2;            /* [12] L2 */
+       pad->button_bind[BTN_TR2]    = RETRO_DEVICE_ID_JOYPAD_R2;            /* [13] R2 */
+       pad->button_bind[KEY_HOME]   = RETRO_DEVICE_ID_JOYPAD_L3;            /* [14] HOME */
+       pad->button_bind[BTN_MODE]   = RETRO_DEVICE_ID_JOYPAD_R3;            /* [15] MODE MENU */
+       buttons = 16;
+
+
+       pad->button_bind[KEY_KP0]   = buttons++;
+       pad->button_bind[KEY_KP1]   = buttons++;
+       pad->button_bind[KEY_KP2]   = buttons++;
+       pad->button_bind[KEY_KP3]   = buttons++;
+       pad->button_bind[KEY_KP4]   = buttons++;
+       pad->button_bind[KEY_KP5]   = buttons++;
+       pad->button_bind[KEY_KP6]   = buttons++;
+       pad->button_bind[KEY_KP7]   = buttons++;
+       pad->button_bind[KEY_KP8]   = buttons++;
+       pad->button_bind[KEY_KP9]   = buttons++;
+       pad->button_bind[KEY_KP0]   = buttons++;
+       pad->button_bind[KEY_9]     = buttons++;
+       pad->button_bind[KEY_0]     = buttons++;
+       pad->button_bind[KEY_Q]     = buttons++;
+   } else {
+
+       /* Go through all possible keycodes, check if they are used,
+        * and map them to button/axes/hat indices.
+        */
+       for (i = KEY_UP; i <= KEY_DOWN && buttons < UDEV_NUM_BUTTONS; i++)
+          if (test_bit(i, keybit))
+             pad->button_bind[i] = buttons++;
+       for (i = BTN_MISC; i < KEY_MAX && buttons < UDEV_NUM_BUTTONS; i++)
+          if (test_bit(i, keybit))
+             pad->button_bind[i] = buttons++;
+       /* The following two ranges are scanned and added after the above
+        * ranges to maintain compatibility with existing key maps.
+        */
+       for (i = 0; i < KEY_UP && buttons < UDEV_NUM_BUTTONS; i++)
+          if (test_bit(i, keybit))
+             pad->button_bind[i] = buttons++;
+       for (i = KEY_DOWN + 1; i < BTN_MISC && buttons < UDEV_NUM_BUTTONS; i++)
+          if (test_bit(i, keybit))
+             pad->button_bind[i] = buttons++;
+   }
    for (i = 0; i < ABS_MISC && axes < NUM_AXES; i++)
    {
       /* Skip hats for now. */

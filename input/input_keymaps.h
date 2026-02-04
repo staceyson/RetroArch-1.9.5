@@ -49,6 +49,7 @@ extern const struct rarch_key_map rarch_key_map_dinput[];
 extern struct rarch_key_map rarch_key_map_rwebinput[RARCH_KEY_MAP_RWEBINPUT_SIZE];
 
 extern const struct rarch_key_map rarch_key_map_linux[];
+extern const struct rarch_key_map rarch_key_map_gsg[];
 extern const struct rarch_key_map rarch_key_map_apple_hid[];
 extern const struct rarch_key_map rarch_key_map_android[];
 extern const struct rarch_key_map rarch_key_map_qnx[];

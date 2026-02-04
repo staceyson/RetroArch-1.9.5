@@ -1331,7 +1331,12 @@ static void *udev_input_init(const char *joypad_driver)
    if (!udev->num_devices)
       RARCH_WARN("[udev]: Couldn't open any keyboard, mouse or touchpad. Are permissions set correctly for /dev/input/event*?\n");
 
+#if 0
    input_keymaps_init_keyboard_lut(rarch_key_map_linux);
+#else
+fprintf(stderr, "JoyPad Driver [[[%s]]]\n", joypad_driver);
+   input_keymaps_init_keyboard_lut(rarch_key_map_gsg);
+#endif
 
 #ifdef __linux__
    linux_terminal_disable_input();
