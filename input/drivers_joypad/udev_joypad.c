@@ -187,26 +187,31 @@ static int udev_add_pad(struct udev_device *dev, unsigned p, int fd, const char 
             (ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(absbit)), absbit) < 0))
       return -1;
 
-   /* Atari GSG Hack - configure a joypad for GSG */
-   if (strcmp(device_name, "agpio-keys") == 0 &&
-               strcmp(path, "/dev/input/event1)") == 0) {
-       pad->button_bind[BTN_EAST]   = RETRO_DEVICE_ID_JOYPAD_B;             /* [0] B */
-       pad->button_bind[BTN_SOUTH]  = RETRO_DEVICE_ID_JOYPAD_Y;             /* [1] Y */
-       pad->button_bind[BTN_TL]     = RETRO_DEVICE_ID_JOYPAD_SELECT;        /* [2] SELECT */
-       pad->button_bind[BTN_TR]     = RETRO_DEVICE_ID_JOYPAD_START;         /* [3] START */
-       pad->button_bind[KEY_UP]     = RETRO_DEVICE_ID_JOYPAD_UP;            /* [4] UP */
-       pad->button_bind[KEY_DOWN]   = RETRO_DEVICE_ID_JOYPAD_DOWN;          /* [5] DOWN */
-       pad->button_bind[KEY_LEFT]   = RETRO_DEVICE_ID_JOYPAD_LEFT;          /* [6] LEFT */
-       pad->button_bind[KEY_RIGHT]  = RETRO_DEVICE_ID_JOYPAD_RIGHT;         /* [7] RIGHT */
-       pad->button_bind[BTN_NORTH]  = RETRO_DEVICE_ID_JOYPAD_A;             /* [8] A */
-       pad->button_bind[BTN_WEST]   = RETRO_DEVICE_ID_JOYPAD_X;             /* [9] X */
-       pad->button_bind[BTN_C]      = RETRO_DEVICE_ID_JOYPAD_L;             /* [10] L */
-       pad->button_bind[BTN_Z]      = RETRO_DEVICE_ID_JOYPAD_R;             /* [11] R */
-       pad->button_bind[BTN_TL2]    = RETRO_DEVICE_ID_JOYPAD_L2;            /* [12] L2 */
-       pad->button_bind[BTN_TR2]    = RETRO_DEVICE_ID_JOYPAD_R2;            /* [13] R2 */
-       pad->button_bind[KEY_HOME]   = RETRO_DEVICE_ID_JOYPAD_L3;            /* [14] HOME */
-       pad->button_bind[BTN_MODE]   = RETRO_DEVICE_ID_JOYPAD_R3;            /* [15] MODE MENU */
-       buttons = 16;
+   if (strcmp(pad->ident, "agpio-keys") == 0  &&
+           strcmp(path, "/dev/input/event1)") == 0) {
+       /*
+        * Atari GSG Hack - configure a joypad for GSG
+        * XXX; May need to do this per-core with:
+        *      basename(path_get(RARCH_PATH_CORE))
+        */
+       RARCH_LOG(
+          "[udev]: Atari GSG Hack - configuring joypad.\n");
+       pad->button_bind[BTN_EAST]   = buttons++;    /* [0] B */
+       pad->button_bind[BTN_SOUTH]  = buttons++;    /* [1] Y */
+       pad->button_bind[BTN_TL]     = buttons++;    /* [2] SELECT */
+       pad->button_bind[BTN_TR]     = buttons++;    /* [3] START */
+       pad->button_bind[KEY_UP]     = buttons++;    /* [4] UP */
+       pad->button_bind[KEY_DOWN]   = buttons++;    /* [5] DOWN */
+       pad->button_bind[KEY_LEFT]   = buttons++;    /* [6] LEFT */
+       pad->button_bind[KEY_RIGHT]  = buttons++;    /* [7] RIGHT */
+       pad->button_bind[BTN_NORTH]  = buttons++;    /* [8] A */
+       pad->button_bind[BTN_WEST]   = buttons++;    /* [9] X */
+       pad->button_bind[BTN_C]      = buttons++;    /* [10] L */
+       pad->button_bind[BTN_Z]      = buttons++;    /* [11] R */
+       pad->button_bind[BTN_TL2]    = buttons++;    /* [12] L2 */
+       pad->button_bind[BTN_TR2]    = buttons++;    /* [13] R2 */
+       pad->button_bind[KEY_HOME]   = buttons++;    /* [14] HOME */
+       pad->button_bind[BTN_MODE]   = buttons++;    /* [15] MODE MENU */
 
 
        pad->button_bind[KEY_KP0]   = buttons++;
@@ -223,6 +228,7 @@ static int udev_add_pad(struct udev_device *dev, unsigned p, int fd, const char 
        pad->button_bind[KEY_9]     = buttons++;
        pad->button_bind[KEY_0]     = buttons++;
        pad->button_bind[KEY_Q]     = buttons++;
+
    } else {
 
        /* Go through all possible keycodes, check if they are used,
@@ -244,6 +250,7 @@ static int udev_add_pad(struct udev_device *dev, unsigned p, int fd, const char 
           if (test_bit(i, keybit))
              pad->button_bind[i] = buttons++;
    }
+
    for (i = 0; i < ABS_MISC && axes < NUM_AXES; i++)
    {
       /* Skip hats for now. */
