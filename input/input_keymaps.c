@@ -991,44 +991,6 @@ const struct rarch_key_map rarch_key_map_x11[] = {
 #endif
 
 #if defined(__linux__) || defined(HAVE_WAYLAND)
-
-/*
- * Keymap for the Atari GSG
- */
-const struct rarch_key_map rarch_key_map_gsg[] = {
-   { BTN_EAST, RETROK_z },     /* B */
-   { BTN_SOUTH, RETROK_a },    /* Y */
-   { BTN_TL, RETROK_RSHIFT },  /* Select */
-   { BTN_TR, RETROK_RETURN },  /* Start */
-   { KEY_UP, RETROK_UP },
-   { KEY_DOWN, RETROK_DOWN },
-   { KEY_LEFT, RETROK_LEFT },
-   { KEY_RIGHT, RETROK_RIGHT },
-   { BTN_NORTH, RETROK_x },    /* A */
-   { BTN_WEST, RETROK_s },     /* X */
-   { BTN_C, RETROK_q },        /* L */
-   { BTN_Z, RETROK_w },        /* R */
-   { BTN_TL2, RETROK_HOME },   /* L2 */
-   { BTN_TR2, RETROK_END },    /* R2 */
-   { KEY_HOME, RETROK_ESCAPE },/* Home Button */
-   { KEY_Q, RETROK_F1 },       /* Settings Button */
-   { BTN_MODE, RETROK_5 },     /* Credit Button */
-   { KEY_KP1, RETROK_KP1 },
-   { KEY_KP2, RETROK_KP2 },
-   { KEY_KP3, RETROK_KP3 },
-   { KEY_KP4, RETROK_KP4 },
-   { KEY_KP5, RETROK_KP5 },
-   { KEY_KP6, RETROK_KP6 },
-   { KEY_KP7, RETROK_KP7 },
-   { KEY_KP8, RETROK_KP8 },
-   { KEY_KP9, RETROK_KP9 },
-   { KEY_9, RETROK_ASTERISK }, /* KP * */
-   { KEY_KP0, RETROK_KP0 },
-   { KEY_0, RETROK_HASH },     /* KP # */
-   { 0, RETROK_UNKNOWN },
-};
-
-
 /* Note: Only one input can be mapped to each
  * RETROK_* key. If several physical inputs
  * correspond to the same key, these inputs

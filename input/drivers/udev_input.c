@@ -166,6 +166,36 @@ static unsigned input_unify_ev_key_code(unsigned code)
     * rarch_key_map_linux and instead be handled here */
    switch (code)
    {
+#ifdef ATARI_GSG
+      /* Handle Atari GSG buttons mappings. */
+      case BTN_TL:  /* GSG Select button */
+         return KEY_RIGHTSHIFT; /* -> RETROK_RSHIFT */
+      case BTN_TR:  /* GSG Start button */
+         return KEY_ENTER; /* -> RETROK_RETURN */
+      case KEY_HOME: /* GSG Home button (problem with kboard??) */
+         return KEY_ESC; /* -> RETROK_ESCAPE */
+      case KEY_Q: /* GSG Settings button (problem with kboard??) */
+         return KEY_F1; /* -> RETROK_F1 */
+      case BTN_MODE: /* GSG Credit button */
+         return KEY_5; /* -> RETROK_5 */
+
+      case BTN_NORTH: /* GSG A button */
+         return KEY_X; /* -> RETROK_x */
+      case BTN_EAST: /* GSG B button */
+          return KEY_Z; /* -> RETROK_z */
+      case BTN_WEST: /* GSG X button */
+          return KEY_S; /* -> RETROK_s */
+      case BTN_SOUTH: /* GSG Y button */
+          return KEY_A; /* -> RETROK_a */
+
+      case BTN_C: /* GSG L button */
+          return KEY_Q; /* -> RETROK_q */
+      case BTN_Z: /* GSG R button */
+          return KEY_W; /* -> RETROK_w  */
+//      case BTN_TL2: /* GSG L2 button */
+//      case BTN_TR2: /* GSG R2 button */
+      /* */
+#endif /* ATARI_GSG */
       case KEY_OK:
       case KEY_SELECT:
          return KEY_ENTER;
@@ -1331,12 +1361,7 @@ static void *udev_input_init(const char *joypad_driver)
    if (!udev->num_devices)
       RARCH_WARN("[udev]: Couldn't open any keyboard, mouse or touchpad. Are permissions set correctly for /dev/input/event*?\n");
 
-#if 0
    input_keymaps_init_keyboard_lut(rarch_key_map_linux);
-#else
-fprintf(stderr, "JoyPad Driver [[[%s]]]\n", joypad_driver);
-   input_keymaps_init_keyboard_lut(rarch_key_map_gsg);
-#endif
 
 #ifdef __linux__
    linux_terminal_disable_input();
