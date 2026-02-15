@@ -192,9 +192,10 @@ static unsigned input_unify_ev_key_code(unsigned code)
           return KEY_Q; /* -> RETROK_q */
       case BTN_Z: /* GSG R button */
           return KEY_W; /* -> RETROK_w  */
-//      case BTN_TL2: /* GSG L2 button */
-//      case BTN_TR2: /* GSG R2 button */
-      /* */
+      case BTN_TL2: /* GSG L2 button */
+	  return KEY_U; /* -> RETROK_u */
+      case BTN_TR2: /* GSG R2 button */
+	  return KEY_O; /* -> RETROK_o */
 #endif /* ATARI_GSG */
       case KEY_OK:
       case KEY_SELECT:
